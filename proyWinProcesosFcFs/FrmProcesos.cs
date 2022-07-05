@@ -503,7 +503,7 @@ namespace proyWinProcesosFcFs
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            int z1 = int.Parse(txt9.Text) ;
+            int z1 = int.Parse(txt9.Text);
             int z2 = int.Parse(txt10.Text);
             int z3 = int.Parse(txt11.Text);
             int z4 = int.Parse(txt12.Text);
@@ -515,9 +515,9 @@ namespace proyWinProcesosFcFs
                 progressBar1.Increment(1);
                 progressBar1.Maximum = z1;
                 label9.Text = txt9.Text;
-                
+
             }
-            
+
             //para el proceso 2
             if (progressBar2.Value < 100)
             {
@@ -545,7 +545,7 @@ namespace proyWinProcesosFcFs
             //para tiempo de finalizacion progressbar 5
             if (progressBar5.Value < 100)
             {
-                int f1= Convert.ToInt32(dgvDatos[2,0].Value);
+                int f1 = Convert.ToInt32(dgvDatos[2, 0].Value);
                 progressBar5.Increment(1);
                 progressBar5.Maximum = f1;
                 label13.Text = Convert.ToString(dgvDatos[2, 0].Value);
