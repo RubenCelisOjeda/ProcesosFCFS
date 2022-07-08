@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace proyWinProcesosFcFs
@@ -37,15 +32,12 @@ namespace proyWinProcesosFcFs
         {
             TextBox obj = (TextBox)sender;
             bool esDigitoEntero = char.IsDigit(e.KeyChar);
-            //bool esPuntoDecimal = ((e.KeyChar == '.')
-            // && (obj.Text.IndexOf('.') == -1));
+
             bool esRetroceso = e.KeyChar == (char)Keys.Back;
-            //bool esSignoNegativo = (e.KeyChar == '-') &&
-            //(obj.Text.Length == 0);
+
             if (esDigitoEntero
             || esRetroceso
-                //|| esSignoNegativo
-                //|| esPuntoDecimal
+
             )
             {
                 e.Handled = false; //Dejar pasar
@@ -167,8 +159,6 @@ namespace proyWinProcesosFcFs
             //Inhabilitar selección múltiple
             dgvDatos.MultiSelect = false;
             //No mostrar encabezados de filas
-            //dgvDatos.RowHeadersVisible = false;
-            //Inhabilitar modificación del ancho del encabezado de fila
             dgvDatos.RowHeadersWidthSizeMode =
             DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             //Inhabilitar agregar filas por parte del usuario
@@ -182,9 +172,6 @@ namespace proyWinProcesosFcFs
             dgvDatos.DefaultCellStyle.Font = new Font(
             dgvDatos.DefaultCellStyle.Font.Name,
             12, dgvDatos.DefaultCellStyle.Font.Style);
-            //dgvDatos.DefaultCellStyle.ForeColor = Color.Red;
-            //Inhabilitar redimensionamiento de encabezado de fila
-            //dgvDatos.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
         }
         private void ajustarControles(ref bool eliminaFilas)
         {
@@ -379,16 +366,6 @@ namespace proyWinProcesosFcFs
                 MessageBox.Show("Debe ingresar procesos para poder hacer el calculo", "Mensaje", MessageBoxButtons.OK,
                    MessageBoxIcon.Information);
             }
-            else if ((txt5.Text == "") || (txt6.Text == "") || (txt7.Text == "") || (txt8.Text == "")
-                || (txt9.Text == "") || (txt10.Text == "") || (txt11.Text == "") || (txt12.Text == "") || (nudProcesos.Value < 4))
-            {
-                this.btnSimular.Enabled = false;
-                this.btnReset.Enabled = false;
-
-
-                MessageBox.Show("Debe ingresar los valores en todos los recuadros e ingresar el número de procesos", "Mensaje", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-            }
             else
             {
                 this.btnSimular.Enabled = true;
@@ -396,19 +373,19 @@ namespace proyWinProcesosFcFs
                 this.btnReset.Enabled = true;
 
                 //calculo del tiempo de finalizacion
-                double ts0 = double.Parse(txt9.Text), ts1 = double.Parse(txt10.Text), ts2 = double.Parse(txt11.Text), ts3 = double.Parse(txt12.Text);
+                double ts0 = double.Parse(txt9.Text == "" ? "0" : txt9.Text), ts1 = double.Parse(txt10.Text == "" ? "0" : txt10.Text), ts2 = double.Parse(txt11.Text == "" ? "0": txt11.Text), ts3 = double.Parse(txt12.Text == "" ? "0" : txt12.Text);
                 double tf0, tf1, tf2, tf3 = 0;
-                tf0 = double.Parse(txt5.Text) + ts0;
+                tf0 = double.Parse(txt5.Text == "" ? "0" : txt5.Text) + ts0;
                 tf1 = ts1 + tf0;
                 tf2 = ts2 + tf1;
                 tf3 = ts3 + tf2;
 
                 //calculo del tiempo de retorno
                 double tr0, tr1, tr2, tr3 = 0;
-                tr0 = tf0 - double.Parse(txt5.Text);
-                tr1 = tf1 - double.Parse(txt6.Text);
-                tr2 = tf2 - double.Parse(txt7.Text);
-                tr3 = tf3 - double.Parse(txt8.Text);
+                tr0 = tf0 - double.Parse(txt5.Text == "" ? "0": txt5.Text);
+                tr1 = tf1 - double.Parse(txt6.Text == "" ? "0" : txt6.Text);
+                tr2 = tf2 - double.Parse(txt7.Text == "" ? "0" : txt7.Text);
+                tr3 = tf3 - double.Parse(txt8.Text == "" ? "0" : txt8.Text);
 
                 //Calculo del tiempo de espera
                 double te0, te1, te2, te3 = 0;
@@ -425,40 +402,88 @@ namespace proyWinProcesosFcFs
                 tnr3 = tr3 / ts3;
 
                 //asignacion de tiempo de servicio
-                dgvDatos[3, 0].Value = txt9.Text;
-                dgvDatos[3, 1].Value = txt10.Text;
-                dgvDatos[3, 2].Value = txt11.Text;
-                dgvDatos[3, 3].Value = txt12.Text;
+                try
+                {
+                    dgvDatos[3, 0].Value = txt9.Text == "" ? "0" : txt9.Text;
+                    dgvDatos[3, 1].Value = txt10.Text == "" ? "0" : txt10.Text;
+                    dgvDatos[3, 2].Value = txt11.Text == "" ? "0" : txt11.Text;
+                    dgvDatos[3, 3].Value = txt12.Text == "" ? "0" : txt12.Text;
+                }
+                catch (Exception ex)
+                {
 
-                //Asignacion de tiempo de llegada
-                dgvDatos[1, 0].Value = txt5.Text;
-                dgvDatos[1, 1].Value = txt6.Text;
-                dgvDatos[1, 2].Value = txt7.Text;
-                dgvDatos[1, 3].Value = txt8.Text;
+                    var mensaje = ex.Message.ToString();
+                }
 
-                //asignacion de tiempo de finalizacion
-                dgvDatos[2, 0].Value = tf0;
-                dgvDatos[2, 1].Value = tf1;
-                dgvDatos[2, 2].Value = tf2;
-                dgvDatos[2, 3].Value = tf3;
+                try
+                {
+                    //Asignacion de tiempo de llegada
+                    dgvDatos[1, 0].Value = txt5.Text;
+                    dgvDatos[1, 1].Value = txt6.Text;
+                    dgvDatos[1, 2].Value = txt7.Text;
+                    dgvDatos[1, 3].Value = txt8.Text;
+                }
+                catch (Exception ex)
+                {
 
-                //Asignacion de tiempo de retorno
-                dgvDatos[5, 0].Value = tr0;
-                dgvDatos[5, 1].Value = tr1;
-                dgvDatos[5, 2].Value = tr2;
-                dgvDatos[5, 3].Value = tr3;
+                    var mensaje = ex.Message.ToString();
+                }
 
-                //Asignacion de tiempo de espera
-                dgvDatos[4, 0].Value = te0;
-                dgvDatos[4, 1].Value = te1;
-                dgvDatos[4, 2].Value = te2;
-                dgvDatos[4, 3].Value = te3;
+                try
+                {
+                    //asignacion de tiempo de finalizacion
+                    dgvDatos[2, 0].Value = tf0;
+                    dgvDatos[2, 1].Value = tf1;
+                    dgvDatos[2, 2].Value = tf2;
+                    dgvDatos[2, 3].Value = tf3;
+                }
+                catch (Exception ex)
+                {
 
-                //Asignacion de Nombre proceso
-                dgvDatos[0, 0].Value = txt1.Text;
-                dgvDatos[0, 1].Value = txt2.Text;
-                dgvDatos[0, 2].Value = txt3.Text;
-                dgvDatos[0, 3].Value = txt4.Text;
+                    var mensaje = ex.Message.ToString();
+                }
+                try
+                {
+
+                    //Asignacion de tiempo de retorno
+                    dgvDatos[5, 0].Value = tr0;
+                    dgvDatos[5, 1].Value = tr1;
+                    dgvDatos[5, 2].Value = tr2;
+                    dgvDatos[5, 3].Value = tr3;
+                }
+                catch (Exception ex)
+                {
+
+                    var mensaje = ex.Message.ToString();
+                }
+
+                try
+                {
+                    //Asignacion de tiempo de espera
+                    dgvDatos[4, 0].Value = te0;
+                    dgvDatos[4, 1].Value = te1;
+                    dgvDatos[4, 2].Value = te2;
+                    dgvDatos[4, 3].Value = te3;
+                }
+                catch (Exception ex)
+                {
+
+                    var mensaje = ex.Message.ToString();
+                }
+
+                try
+                {
+                    //Asignacion de Nombre proceso
+                    dgvDatos[0, 0].Value = txt1.Text;
+                    dgvDatos[0, 1].Value = txt2.Text;
+                    dgvDatos[0, 2].Value = txt3.Text;
+                    dgvDatos[0, 3].Value = txt4.Text;
+                }
+                catch (Exception ex)
+                {
+
+                    var mensaje = ex.Message.ToString();
+                }
 
             }
         }
@@ -503,10 +528,10 @@ namespace proyWinProcesosFcFs
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            int z1 = int.Parse(txt9.Text);
-            int z2 = int.Parse(txt10.Text);
-            int z3 = int.Parse(txt11.Text);
-            int z4 = int.Parse(txt12.Text);
+            int z1 = int.Parse(txt9.Text == "" ? "0" : txt9.Text);
+            int z2 = int.Parse(txt10.Text == "" ? "0" : txt10.Text);
+            int z3 = int.Parse(txt11.Text == "" ? "0" : txt11.Text);
+            int z4 = int.Parse(txt12.Text == "" ? "0" : txt12.Text);
 
             timer1.Interval = 1000;
             //proceso 1
@@ -514,7 +539,7 @@ namespace proyWinProcesosFcFs
             {
                 progressBar1.Increment(1);
                 progressBar1.Maximum = z1;
-                label9.Text = txt9.Text;
+                label9.Text = txt9.Text == "" ? "0" : txt9.Text;
 
             }
 
@@ -523,7 +548,7 @@ namespace proyWinProcesosFcFs
             {
                 progressBar2.Increment(1);
                 progressBar2.Maximum = z2;
-                label10.Text = txt10.Text;
+                label10.Text = txt10.Text == "" ? "0" : txt10.Text;
             }
 
             //para proceso 3
@@ -531,7 +556,7 @@ namespace proyWinProcesosFcFs
             {
                 progressBar3.Increment(1);
                 progressBar3.Maximum = z3;
-                label11.Text = txt11.Text;
+                label11.Text = txt11.Text == "" ? "0" : txt11.Text;
             }
 
             //para proceso 4
@@ -539,7 +564,7 @@ namespace proyWinProcesosFcFs
             {
                 progressBar4.Increment(1);
                 progressBar4.Maximum = z4;
-                label12.Text = txt12.Text;
+                label12.Text = txt12.Text == "" ? "0" : txt12.Text;
             }
 
             //para tiempo de finalizacion progressbar 5
@@ -554,28 +579,41 @@ namespace proyWinProcesosFcFs
             //para finalizacion 2
             if (progressBar6.Value < 100)
             {
-                int f1 = Convert.ToInt32(dgvDatos[2, 1].Value);
-                progressBar6.Increment(1);
-                progressBar6.Maximum = f1;
-                label14.Text = Convert.ToString(dgvDatos[2, 1].Value);
+
+                if (dgvDatos.Rows.Count > 1)
+                {
+                    int f1 = Convert.ToInt32(dgvDatos[2, 1].Value);
+                    progressBar6.Increment(1);
+                    progressBar6.Maximum = f1;
+                    label14.Text = Convert.ToString(dgvDatos[2, 1].Value);
+                }
+
+               
             }
 
             //para finalizacion 3
             if (progressBar7.Value < 100)
             {
-                int f1 = Convert.ToInt32(dgvDatos[2, 2].Value);
-                progressBar7.Increment(1);
-                progressBar7.Maximum = f1;
-                label15.Text = Convert.ToString(dgvDatos[2, 2].Value);
+
+                if (dgvDatos.Rows.Count > 2)
+                {
+                    int f1 = Convert.ToInt32(dgvDatos[2, 2].Value);
+                    progressBar7.Increment(1);
+                    progressBar7.Maximum = f1;
+                    label15.Text = Convert.ToString(dgvDatos[2, 2].Value);
+                }
             }
 
             //para finalizacion 4
             if (progressBar8.Value < 100)
             {
-                int f1 = Convert.ToInt32(dgvDatos[2, 3].Value);
-                progressBar8.Increment(1);
-                progressBar8.Maximum = f1;
-                label16.Text = Convert.ToString(dgvDatos[2, 3].Value);
+                if (dgvDatos.Rows.Count > 3)
+                {
+                    int f1 = Convert.ToInt32(dgvDatos[2, 3].Value);
+                    progressBar8.Increment(1);
+                    progressBar8.Maximum = f1;
+                    label16.Text = Convert.ToString(dgvDatos[2, 3].Value);
+                }
             }
 
             //para los tiempos de retorno
@@ -590,28 +628,37 @@ namespace proyWinProcesosFcFs
             //tiempo de reorno 2
             if (progressBar10.Value < 100)
             {
-                int f1 = Convert.ToInt32(dgvDatos[5, 1].Value);
-                progressBar10.Increment(1);
-                progressBar10.Maximum = f1;
-                label18.Text = Convert.ToString(dgvDatos[5, 1].Value);
+                if (dgvDatos.Rows.Count > 1)
+                {
+                    int f1 = Convert.ToInt32(dgvDatos[5, 1].Value);
+                    progressBar10.Increment(1);
+                    progressBar10.Maximum = f1;
+                    label18.Text = Convert.ToString(dgvDatos[5, 1].Value);
+                }
             }
 
             //tiempo de retorno 3
             if (progressBar11.Value < 100)
             {
-                int f1 = Convert.ToInt32(dgvDatos[5, 2].Value);
-                progressBar11.Increment(1);
-                progressBar11.Maximum = f1;
-                label19.Text = Convert.ToString(dgvDatos[5, 2].Value);
+                if (dgvDatos.Rows.Count > 2)
+                {
+                    int f1 = Convert.ToInt32(dgvDatos[5, 2].Value);
+                    progressBar11.Increment(1);
+                    progressBar11.Maximum = f1;
+                    label19.Text = Convert.ToString(dgvDatos[5, 2].Value);
+                }
             }
 
             //tiempo de retorno 4
             if (progressBar12.Value < 100)
             {
-                int f1 = Convert.ToInt32(dgvDatos[5, 3].Value);
-                progressBar12.Increment(1);
-                progressBar12.Maximum = f1;
-                label20.Text = Convert.ToString(dgvDatos[5, 3].Value);
+                if (dgvDatos.Rows.Count > 3)
+                {
+                    int f1 = Convert.ToInt32(dgvDatos[5, 3].Value);
+                    progressBar12.Increment(1);
+                    progressBar12.Maximum = f1;
+                    label20.Text = Convert.ToString(dgvDatos[5, 3].Value);
+                }
             }
 
             //Para tiempo de espera
@@ -622,29 +669,42 @@ namespace proyWinProcesosFcFs
                 progressBar13.Maximum = f1;
                 label24.Text = Convert.ToString(dgvDatos[4, 0].Value);
             }
+
             //espera 2
             if (progressBar14.Value < 100)
             {
-                int f1 = Convert.ToInt32(dgvDatos[4, 1].Value);
-                progressBar14.Increment(1);
-                progressBar14.Maximum = f1;
-                label25.Text = Convert.ToString(dgvDatos[4, 1].Value);
+
+                if (dgvDatos.Rows.Count > 1)
+                {
+                    int f1 = Convert.ToInt32(dgvDatos[4, 1].Value);
+                    progressBar14.Increment(1);
+                    progressBar14.Maximum = f1;
+                    label25.Text = Convert.ToString(dgvDatos[4, 1].Value);
+                }
+               
             }
             //espera 3
             if (progressBar15.Value < 100)
             {
-                int f1 = Convert.ToInt32(dgvDatos[4, 2].Value);
-                progressBar15.Increment(1);
-                progressBar15.Maximum = f1;
-                label26.Text = Convert.ToString(dgvDatos[4, 2].Value);
+                if (dgvDatos.Rows.Count > 2)
+                {
+                    int f1 = Convert.ToInt32(dgvDatos[4, 2].Value);
+                    progressBar15.Increment(1);
+                    progressBar15.Maximum = f1;
+                    label26.Text = Convert.ToString(dgvDatos[4, 2].Value);
+                }
             }
             //espera 4
             if (progressBar16.Value < 100)
             {
-                int f1 = Convert.ToInt32(dgvDatos[4, 3].Value);
-                progressBar16.Increment(1);
-                progressBar16.Maximum = f1;
-                label27.Text = Convert.ToString(dgvDatos[4, 3].Value);
+                if (dgvDatos.Rows.Count > 3)
+                {
+                    int f1 = Convert.ToInt32(dgvDatos[4, 3].Value);
+                    progressBar16.Increment(1);
+                    progressBar16.Maximum = f1;
+                    label27.Text = Convert.ToString(dgvDatos[4, 3].Value);
+                }
+                
             }
         }
 
