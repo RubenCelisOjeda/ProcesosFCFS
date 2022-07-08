@@ -125,10 +125,10 @@ namespace proyWinProcesosFcFs
             //Establecer rótulos de los encabezados de columna
             dgvDatos.Columns[0].Name = "Proceso";
             dgvDatos.Columns[1].Name = "Tiempo Ll.";
-            dgvDatos.Columns[2].Name = "Tiempo F.";
-            dgvDatos.Columns[3].Name = "Tiempo S.";
-            dgvDatos.Columns[4].Name = "Tiempo E.";
-            dgvDatos.Columns[5].Name = "Tiempo R.";
+            dgvDatos.Columns[2].Name = "Tiempo F. ";
+            dgvDatos.Columns[3].Name = "Tiempo S. ";
+            dgvDatos.Columns[4].Name = "Tiempo E. ";
+            dgvDatos.Columns[5].Name = "Tiempo R. ";
             //dgvDatos.Columns[6].Name = "Tiempo NR.";
 
             //Ajuste automático del ancho del contenedor
@@ -156,11 +156,11 @@ namespace proyWinProcesosFcFs
 
             //Agregar tooltip a las columnas
             dgvDatos.Columns[0].ToolTipText = "Nombre del proceso";
-            dgvDatos.Columns[1].ToolTipText = "Tiempo de llegada";
-            dgvDatos.Columns[2].ToolTipText = "Tiempo de finalización";
-            dgvDatos.Columns[3].ToolTipText = "Tiempo de servicio";
-            dgvDatos.Columns[4].ToolTipText = "Tiempo de espera";
-            dgvDatos.Columns[5].ToolTipText = "Tiempo de retorno";
+            dgvDatos.Columns[1].ToolTipText = "Tiempo de llegada  (Tiempo llegada  (Tiempo que se le asigna en llegar))";
+            dgvDatos.Columns[2].ToolTipText = "Tiempo de finalización ((Tiempo cuando finaliza el proceso ejecutar))";
+            dgvDatos.Columns[3].ToolTipText = "Tiempo de servicio ((Tiempo que se establece al proceso))";
+            dgvDatos.Columns[4].ToolTipText = "Tiempo de espera ((Tiempo quese establecer de tiempo de espera sobre los procesos))";
+            dgvDatos.Columns[5].ToolTipText = "Tiempo de retorno ((Es el intervalo de tiempo desde que un proceso es cargado hasta que este finaliza su ejecución))";
             //dgvDatos.Columns[6].ToolTipText = "Tiempo de retorno normalizado";
 
 
@@ -705,13 +705,12 @@ namespace proyWinProcesosFcFs
 
         private void btnAcercade_Click(object sender, EventArgs e)
         {
-            //AboutBox1 ac = new AboutBox1();
-            //ac.ShowDialog();
+
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("IExplore.exe", "http://www.facebook.com/juan.g.banderas"); 
+          
         }
 
         
